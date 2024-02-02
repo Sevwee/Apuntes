@@ -1,0 +1,213 @@
+DIFERENCIAS SAX Y DOM:
+SAX (Simple API for XML) y DOM (Document Object Model) son dos enfoques diferentes para procesar y manipular documentos XML, y cada uno tiene sus propias características y ventajas. Aquí hay algunas de las principales diferencias entre SAX y DOM:
+
+Modelo de Datos:
+
+SAX: Es un modelo basado en eventos. No crea una representación en memoria del documento completo, sino que lee el documento XML secuencialmente y emite eventos a medida que encuentra elementos, atributos, etc. Es eficiente en términos de memoria porque no carga todo el documento en la memoria.
+DOM: Construye un árbol completo en memoria que representa la estructura del documento XML. Esto permite un acceso más fácil a cualquier parte del documento, pero puede consumir más memoria, especialmente para documentos grandes.
+Acceso a Datos:
+
+SAX: Es más adecuado para procesamiento secuencial y eventos. No permite un acceso aleatorio eficiente al contenido del documento. Se utiliza comúnmente cuando se necesita leer grandes documentos XML de manera eficiente.
+DOM: Permite un acceso directo y manipulación fácil de cualquier parte del documento a través del árbol en memoria. Es más conveniente para situaciones en las que se requiere navegación y modificación frecuente del contenido.
+Uso de Memoria:
+
+SAX: Requiere menos memoria ya que no carga todo el documento en la memoria al mismo tiempo. Es más eficiente para procesar documentos grandes.
+DOM: Puede consumir más memoria ya que carga el documento completo en la memoria como un árbol de objetos.
+Eficiencia:
+
+SAX: Es más eficiente en términos de rendimiento para la lectura de grandes cantidades de datos, ya que no necesita almacenar el documento completo en memoria.
+DOM: Puede ser más lento y requerir más recursos, especialmente para documentos grandes, debido a la construcción del árbol en memoria.
+Manejo de Errores:
+
+SAX: Puede ser más desafiante gestionar errores ya que el procesamiento es en tiempo real y basado en eventos.
+DOM: Al cargar el documento completo en memoria, se pueden manejar errores de manera más fácil y precisa.
+En resumen, la elección entre SAX y DOM depende de los requisitos específicos de la aplicación. Si se trata de documentos grandes y se necesita eficiencia en el uso de memoria, SAX puede ser más adecuado. Si se requiere un acceso fácil y manipulación del contenido, especialmente en documentos más pequeños, DOM puede ser la mejor opción.
+
+Clases propias SAX:
+public class SimpleSAXExample {
+    public static void main(String[] args) {
+        try {
+            // Crear un analizador SAX
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser saxParser = factory.newSAXParser();
+            XMLReader xmlReader = saxParser.getXMLReader();
+
+            // Configurar el manejador personalizado
+            MiManejadorSAX handler = new MiManejadorSAX();
+            xmlReader.setContentHandler(handler);
+
+            // Parsear un documento XML
+            String xmlString = "<ejemplo><elemento atributo='valor'>Contenido del elemento</elemento></ejemplo>";
+            xmlReader.parse(new org.xml.sax.InputSource(new java.io.StringReader(xmlString)));
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+// Creamos una clase que hereda de DefaultHandler para manejar los eventos SAX
+class MiManejadorSAX extends DefaultHandler {
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        System.out.println("Inicio de elemento: " + qName);
+        if (attributes.getLength() > 0) {
+            System.out.println("Atributos: " + attributes);
+        }
+    }
+
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        System.out.println("Fin de elemento: " + qName);
+    }
+
+    @Override
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        String contenido = new String(ch, start, length).trim();
+        if (!contenido.isEmpty()) {
+            System.out.println("Contenido: " + contenido);
+        }
+    }
+}
+Este código Java utiliza la biblioteca SAX incorporada en Java para procesar XML. La clase MiManejadorSAX hereda de DefaultHandler y sobrescribe los métodos para manejar los eventos SAX. La función principal (main) configura el analizador SAX, el manejador y parsea un documento XML de ejemplo. Puedes ajustar el contenido del documento XML según tus necesidades.
+DOM:
+public class SimpleSAXExample {
+    public static void main(String[] args) {
+        try {
+            // Crear un analizador SAX
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser saxParser = factory.newSAXParser();
+            XMLReader xmlReader = saxParser.getXMLReader();
+
+            // Configurar el manejador personalizado
+            MiManejadorSAX handler = new MiManejadorSAX();
+            xmlReader.setContentHandler(handler);
+
+            // Parsear un documento XML
+            String xmlString = "<ejemplo><elemento atributo='valor'>Contenido del elemento</elemento></ejemplo>";
+            xmlReader.parse(new org.xml.sax.InputSource(new java.io.StringReader(xmlString)));
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+// Creamos una clase que hereda de DefaultHandler para manejar los eventos SAX
+class MiManejadorSAX extends DefaultHandler {
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        System.out.println("Inicio de elemento: " + qName);
+        if (attributes.getLength() > 0) {
+            System.out.println("Atributos: " + attributes);
+        }
+    }
+
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        System.out.println("Fin de elemento: " + qName);
+    }
+
+    @Override
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        String contenido = new String(ch, start, length).trim();
+        if (!contenido.isEmpty()) {
+            System.out.println("Contenido: " + contenido);
+        }
+    }
+}
+
+En este ejemplo, creamos un documento DOM a partir de una cadena XML. Luego, obtenemos el elemento raíz y recorremos sus hijos para imprimir información sobre cada elemento. Ten en cuenta que este es un ejemplo simple y que puedes ampliar y adaptar según tus necesidades.
+
+UF4
+JavaBeans
+
+Un JavaBean es una clase de Java que sigue ciertas convenciones para ser utilizada de manera eficiente en entornos de desarrollo y herramientas visuales. Aquí están algunas de las características que debe tener una clase para ser considerada un JavaBean:
+
+Constructor predeterminado: La clase debe tener un constructor sin argumentos (predeterminado). Esto permite que las herramientas y los frameworks creen instancias de la clase utilizando Class.newInstance() u otros mecanismos que dependen de la existencia de un constructor sin argumentos.
+
+java
+Copy code
+public MiBean() {
+    // Constructor predeterminado sin argumentos
+}
+Propiedades: Las propiedades deben ser accedidas mediante métodos get y set. Estos métodos deben seguir las convenciones de nomenclatura, como getPropiedad y setPropiedad.
+
+java
+Copy code
+private String propiedad;
+
+public String getPropiedad() {
+    return propiedad;
+}
+
+public void setPropiedad(String propiedad) {
+    this.propiedad = propiedad;
+}
+Serialización: La clase debe ser serializable, lo que significa que implementa la interfaz Serializable. Esto es útil para almacenar y recuperar el estado de los objetos JavaBean.
+
+java
+Copy code
+import java.io.Serializable;
+
+public class MiBean implements Serializable {
+    // ...
+}
+Acceso público a los métodos y propiedades: Los métodos get y set deben ser públicos para que las herramientas y frameworks puedan acceder a ellos. Además, las propiedades deben ser accesibles directamente.
+
+Convenciones de nombres: Las propiedades deben seguir las convenciones de nombres estándar de Java. Por ejemplo, si la propiedad es "nombre", los métodos get y set deberían ser getNombre y setNombre.
+
+Eventos: Si la clase emite eventos, debe proporcionar métodos para agregar y quitar oyentes de eventos.
+
+java
+Copy code
+public void agregarMiBeanListener(MiBeanListener listener) {
+    // Código para agregar un oyente
+}
+
+public void removerMiBeanListener(MiBeanListener listener) {
+    // Código para remover un oyente
+}
+
+Ventajas e inconvenientes de programar con eventos
+Ventajas de programar con eventos en Java:
+
+Desacoplamiento: Permite la creación de sistemas más desacoplados, donde los componentes no necesitan conocer detalles internos de los demás.
+
+Reactividad: Facilita la creación de interfaces de usuario reactivas, respondiendo a eventos como clics de ratón, pulsaciones de teclas, etc.
+
+Manejo de concurrencia: Proporciona un enfoque eficiente para manejar la concurrencia en programas al gestionar eventos de manera asíncrona.
+
+Extensibilidad: Facilita la extensibilidad del código al permitir la incorporación de nuevos componentes o funcionalidades sin cambiar la estructura existente.
+
+Inconvenientes de programar con eventos en Java:
+
+Complejidad: El manejo de eventos puede aumentar la complejidad del código, especialmente en aplicaciones grandes.
+
+Difícil depuración: En algunos casos, puede ser más difícil rastrear y depurar código basado en eventos, especialmente cuando hay múltiples fuentes y manejadores de eventos.
+
+Posible pérdida de rendimiento: El uso excesivo de eventos puede llevar a una pérdida de rendimiento si no se manejan adecuadamente, especialmente en aplicaciones sensibles al rendimiento.
+
+Posibilidad de fugas de memoria: Si no se gestionan correctamente, los eventos pueden llevar a fugas de memoria si las referencias a objetos no se liberan adecuadamente después de manejar un evento.
+
+En resumen, el uso de eventos en Java proporciona beneficios como desacoplamiento y reactividad, pero también puede introducir complejidad y desafíos de depuración, por lo que es importante equilibrar su uso según los requisitos específicos del proyecto.
+
+PROGRAMAR CON EVENTOS
+
+Tienes un botón:
+
+Ok, imagina que este botón es como el botón de "Play" en Spotify.
+Quieres que algo suceda cuando lo clican:
+
+No solo quieres que el botón se vea bonito, ¡quieres que algo real suceda! Como reproducir tu canción favorita.
+Creas a un amigo atento al clic:
+
+Así que creas a tu amigo "Escucha". Este amigo está ahí solo para escuchar si alguien hace clic en el botón.
+Le enseñas a tu amigo qué hacer:
+
+Le dices a tu amigo "Escucha": "Amigo, si alguien hace clic en el botón, quiero que hagas sonar la música".
+Presentas a tu amigo al botón:
+
+Luego, presentas a tu amigo "Escucha" al botón y le dices: "Cuando alguien haga clic en ti, avísale a mi amigo lo que pasó".
+Alguien hace clic:
+
+¡Listo! Cuando alguien hace clic en el botón (el de "Play" en Spotify), tu amigo "Escucha" se entera y hace sonar la música. ¡Magia!
+En Java, el botón es como un objeto JButton, tu amigo "Escucha" es una clase que implementa ActionListener, y cuando alguien hace clic, la clase de "Escucha" ejecuta el código que le enseñaste.
